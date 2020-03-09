@@ -32,6 +32,7 @@ export default function CheckoutForm() {
   };
 
   const handleSubmit = async (event) => {
+
     // We don't want to let default form submission happen here,
     // which would refresh the page.
     event.preventDefault();
@@ -44,7 +45,7 @@ export default function CheckoutForm() {
 
     createPaymentIntent().then((secret) => {
 
-      const result = stripe.confirmCardPayment(secret, {
+      stripe.confirmCardPayment(secret, {
         payment_method: {
           card: elements.getElement(CardElement),
           billing_details: {
@@ -54,11 +55,13 @@ export default function CheckoutForm() {
       }).then((result) => {
         if (result.error) {
           // Show error to your customer (e.g., insufficient funds)
+          alert(result.error.message)
           console.log(result.error.message);
         } else {
           // The payment has been processed!
           if (result.paymentIntent.status === 'succeeded') {
             console.log("Payment success!")
+            console.log(result)
             // Show a success message to your customer
             // There's a risk of the customer closing the window before callback
             // execution. Set up a webhook or plugin to listen for the
@@ -72,8 +75,18 @@ export default function CheckoutForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <CardSection />
-      <button disabled={!stripe}>Confirm order</button>
+      <div className="field">
+        <input className="is-fullwidth"
+          id="name"
+          name="name"
+          placeholder="Your name"
+          required
+        />        
+      </div>
+      <div className="field">
+        <CardSection />
+      </div>
+      <button className="button is-link" disabled={!stripe}>Confirm order</button>
     </form>
   );
 }
