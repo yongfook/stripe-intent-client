@@ -16,17 +16,20 @@ export default function CheckoutForm() {
         if (res.status === 200) {
           return res.json();
         } else {
-          return null;
+          if (res.status === 400) {
+            console.log("API request error")
+            return res.json().then((error) => {
+              alert(error.message)
+            });
+
+          } else {
+            return null;
+          }
         }
       })
       .then((data) => {
-        if (!data || data.error) {
-          console.log('API error:', {data});
-          throw new Error('PaymentIntent API Error');
-        } else {
-          // console.log("PaymentIntent success")
-          // console.log(data.client_secret)
-          return data.client_secret
+        if (data) {
+          return data.client_secret;
         }
       });
   };
@@ -44,6 +47,10 @@ export default function CheckoutForm() {
     }
 
     createPaymentIntent().then((secret) => {
+      if (!secret) {
+        console.log("Stopping form submit");
+        return;
+      }
 
       stripe.confirmCardPayment(secret, {
         payment_method: {
@@ -76,11 +83,19 @@ export default function CheckoutForm() {
   return (
     <form onSubmit={handleSubmit}>
       <div className="field">
-        <input className="is-fullwidth"
+        <input className="input is-fullwidth"
           id="name"
           name="name"
-          placeholder="Your name"
-          required
+          placeholder="Name"
+          // required
+        />        
+      </div>
+      <div className="field">
+        <input className="input is-fullwidth"
+          id="address"
+          name="address"
+          placeholder="Address"
+          // required
         />        
       </div>
       <div className="field">
