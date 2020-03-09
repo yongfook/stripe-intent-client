@@ -7,10 +7,12 @@ export default function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
 
-  const createPaymentIntent = async () => {
+  const createPaymentIntent = async (event) => {
     return window
       .fetch("http://localhost:5000/api/v1/payment_intents", {
-        method: 'POST'
+        method: 'POST',
+        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+        body: JSON.stringify({'name': event.target[0].value, 'address': event.target[1].value})
       })
       .then((res) => {
         if (res.status === 200) {
@@ -46,7 +48,7 @@ export default function CheckoutForm() {
       return;
     }
 
-    createPaymentIntent().then((secret) => {
+    createPaymentIntent(event).then((secret) => {
       if (!secret) {
         console.log("Stopping form submit");
         return;
@@ -87,7 +89,7 @@ export default function CheckoutForm() {
           id="name"
           name="name"
           placeholder="Name"
-          // required
+          required
         />        
       </div>
       <div className="field">
@@ -95,13 +97,13 @@ export default function CheckoutForm() {
           id="address"
           name="address"
           placeholder="Address"
-          // required
+          required
         />        
       </div>
       <div className="field">
         <CardSection />
       </div>
-      <button className="button is-link" disabled={!stripe}>Confirm order</button>
+      <button className="button is-link" disabled={!stripe}>Buy Now for $12 USD</button>
     </form>
   );
 }
