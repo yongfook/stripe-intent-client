@@ -14,6 +14,10 @@ function App() {
 
   return (
     <Elements stripe={stripePromise}>
+    	<img src="/hotdogpin.jpg" />
+    	<br />
+    	<br />
+    	<h1 className="title">New Improved Hotdog Pin! Buy Now!</h1>
     	<CheckoutForm />    		
     </Elements>
   );
