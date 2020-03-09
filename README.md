@@ -12,3 +12,10 @@ In the project directory, you can run:
 2. Run through a test scenario with test card numbers
 3. After a successful payment, verify logged paymentintent success at:  
 https://yongfook-stripe-intent-server.herokuapp.com/api/v1/orders
+
+## Suggested future improvements
+
+I felt that these items fell outside the scope of this task but if I were to make this production-ready, I might work on:
+1. UI-based validation messages rather than alert-based
+2. Choose number of items to order
+3. Give user a visual confirmation receipt e.g. order number etc
