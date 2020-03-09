@@ -12,7 +12,11 @@ export default function CheckoutForm() {
       .fetch("http://localhost:5000/api/v1/payment_intents", {
         method: 'POST',
         headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-        body: JSON.stringify({'name': event.target[0].value, 'address': event.target[1].value})
+        body: JSON.stringify({
+          'name': event.target[0].value, 
+          'email': event.target[1].value, 
+          'address': event.target[2].value
+        })
       })
       .then((res) => {
         if (res.status === 200) {
@@ -37,6 +41,7 @@ export default function CheckoutForm() {
   };
 
   const handleSubmit = async (event) => {
+    document.querySelector('.button').classList.add("is-loading");
 
     // We don't want to let default form submission happen here,
     // which would refresh the page.
@@ -51,6 +56,7 @@ export default function CheckoutForm() {
     createPaymentIntent(event).then((secret) => {
       if (!secret) {
         console.log("Stopping form submit");
+        document.querySelector('.button').classList.remove("is-loading");
         return;
       }
 
@@ -66,11 +72,14 @@ export default function CheckoutForm() {
           // Show error to your customer (e.g., insufficient funds)
           alert(result.error.message)
           console.log(result.error.message);
+          document.querySelector('.button').classList.remove("is-loading");
         } else {
           // The payment has been processed!
           if (result.paymentIntent.status === 'succeeded') {
             console.log("Payment success!")
             console.log(result)
+            document.querySelector('.button').classList.remove("is-loading");
+            alert("Thank you!")
             // Show a success message to your customer
             // There's a risk of the customer closing the window before callback
             // execution. Set up a webhook or plugin to listen for the
@@ -89,6 +98,14 @@ export default function CheckoutForm() {
           id="name"
           name="name"
           placeholder="Name"
+          required
+        />        
+      </div>
+      <div className="field">
+        <input className="input is-fullwidth"
+          id="email"
+          name="email"
+          placeholder="Email"
           required
         />        
       </div>
