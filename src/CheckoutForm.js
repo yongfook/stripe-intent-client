@@ -13,9 +13,9 @@ export default function CheckoutForm() {
         method: 'POST',
         headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
         body: JSON.stringify({
-          'name': event.target[0].value, 
-          'email': event.target[1].value, 
-          'address': event.target[2].value
+          'name': document.querySelector('#name').value, 
+          'email': document.querySelector('#email').value, 
+          'address': document.querySelector('#address').value
         })
       })
       .then((res) => {
@@ -64,8 +64,8 @@ export default function CheckoutForm() {
         payment_method: {
           card: elements.getElement(CardElement),
           billing_details: {
-            name: 'Jenny Rosen',
-          },
+            name: document.querySelector('#name').value,
+          }
         }
       }).then((result) => {
         if (result.error) {
